@@ -39,6 +39,7 @@ Then open [http://localhost:8000](http://localhost:8000) in your browser.
 | `bird.png` | Bird sprite |
 | `pipe.png` | Pipe sprite (adapted to the game's aspect ratio) |
 | `pipe-top.png` | Flipped pipe sprite, used for the top pipes |
+| `onekey.png` | The bird's O-key head, used as the O in the title |
 | `screenshots/` | Screenshots used in this README |
 | `bird-original.png`, `pipe-original.png` | Original drawings, kept for future edits |
 
@@ -51,5 +52,5 @@ A few variables at the top of `index.html` let you tweak the difficulty:
 - `birdGravity`: gravity strength (default: 800)
 - `birdFlapPower`: power of one flap (default: 300)
 - `speeds`: the SLOW / NORMAL / FAST / SUPER FAST values offered in the menu
-- `birdPipeInterval`: delay between pipes in ms (default: 2000)
+- `pipeDistance`: horizontal distance between pipes in pixels, the same at every speed (default: 250)
 - `pipeHole`: size of the gap between pipes (default: 200)

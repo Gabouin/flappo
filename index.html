@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Flappo</title>
+    <link rel="icon" type="image/png" href="onekey.png">
     <script src="https://cdn.jsdelivr.net/npm/phaser-ce@2.20.0/build/phaser.min.js"></script>
 </head>
 <body>
@@ -13,7 +14,7 @@ window.onload = function(){
     var birdGravity = 800;
     var birdSpeed = 125;
     var birdFlapPower = 300;
-    var birdPipeInterval = 2000;
+    var pipeDistance = 250;
     var pipeHole = 200;
     var pipeGroup;
     var score = 0;
@@ -34,11 +35,18 @@ window.onload = function(){
             game.load.image("bird", "bird.png");
             game.load.image("pipe", "pipe.png");
             game.load.image("pipe_top", "pipe-top.png");
+            game.load.image("onekey", "onekey.png");
         },
         create: function(){
             game.stage.backgroundColor = "#87CEEB";
-            var title = game.add.text(160, 110, "FLAPPO", {font: "bold 48px Arial", fill: "#ffffff"});
-            title.anchor.set(0.5);
+            var title = game.add.text(0, 110, "FLAPP", {font: "bold 48px Arial", fill: "#ffffff"});
+            title.anchor.set(0, 0.5);
+            var logo = game.add.image(0, 110, "onekey");
+            logo.anchor.set(0, 0.5);
+            logo.width = 46;
+            logo.height = 48;
+            title.x = 160 - (title.width + logo.width + 4)/2;
+            logo.x = title.x + title.width + 4;
             this.playText = game.add.text(160, 240, "", {font: "bold 24px Arial"});
             this.playText.anchor.set(0.5);
             this.speedText = game.add.text(160, 300, "", {font: "bold 24px Arial"});
@@ -104,7 +112,7 @@ window.onload = function(){
             var oKey = game.input.keyboard.addKey(Phaser.Keyboard.O);
             oKey.onDown.removeAll();
             oKey.onDown.add(flap, this);
-            game.time.events.loop(birdPipeInterval, addPipe);
+            game.time.events.loop(pipeDistance / birdSpeed * 1000, addPipe);
             addPipe();
         },
         update: function(){
