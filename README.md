@@ -12,7 +12,7 @@ A Flappy Bird clone built with [Phaser CE](https://github.com/phaserjs/phaser-ce
 
 The whole game is played with a single key: **O**.
 
-In the start menu, the selection switches between PLAY and SPEED on its own. Press **O** to activate the highlighted line: PLAY starts the game, SPEED cycles between SLOW, NORMAL and FAST.
+In the start menu, the selection switches between PLAY and SPEED on its own. Press **O** to activate the highlighted line: PLAY starts the game, SPEED cycles between SLOW, NORMAL, FAST and SUPER FAST.
 
 In game:
 
@@ -50,6 +50,6 @@ A few variables at the top of `index.html` let you tweak the difficulty:
 
 - `birdGravity`: gravity strength (default: 800)
 - `birdFlapPower`: power of one flap (default: 300)
-- `speeds`: the SLOW / NORMAL / FAST values offered in the menu
+- `speeds`: the SLOW / NORMAL / FAST / SUPER FAST values offered in the menu
 - `birdPipeInterval`: delay between pipes in ms (default: 2000)
 - `pipeHole`: size of the gap between pipes (default: 200)
