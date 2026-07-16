@@ -19,6 +19,61 @@ window.onload = function(){
     var score = 0;
     var scoreText;
     var topScore;
+    var speeds = [
+        {label: "SLOW", value: 90},
+        {label: "NORMAL", value: 125},
+        {label: "FAST", value: 170}
+    ];
+    var speedIndex = 1;
+
+    var menu = function(game){};
+
+    menu.prototype = {
+        preload: function(){
+            game.load.image("bird", "bird.png");
+            game.load.image("pipe", "pipe.png");
+            game.load.image("pipe_top", "pipe-top.png");
+        },
+        create: function(){
+            game.stage.backgroundColor = "#87CEEB";
+            var title = game.add.text(160, 110, "FLAPPO", {font: "bold 48px Arial", fill: "#ffffff"});
+            title.anchor.set(0.5);
+            this.playText = game.add.text(160, 240, "", {font: "bold 24px Arial"});
+            this.playText.anchor.set(0.5);
+            this.speedText = game.add.text(160, 300, "", {font: "bold 24px Arial"});
+            this.speedText.anchor.set(0.5);
+            var help = game.add.text(160, 430, "the selection moves by itself\npress O to choose", {font: "14px Arial", align: "center"});
+            help.anchor.set(0.5);
+            this.selected = 0;
+            this.updateTexts();
+            game.time.events.loop(1000, this.moveCursor, this);
+            this.oKey = game.input.keyboard.addKey(Phaser.Keyboard.O);
+            this.oKey.onDown.removeAll();
+            this.oKey.onDown.add(this.choose, this);
+        },
+        moveCursor: function(){
+            this.selected = (this.selected+1)%2;
+            this.updateTexts();
+        },
+        updateTexts: function(){
+            var speedLabel = "SPEED: "+speeds[speedIndex].label;
+            this.playText.text = this.selected===0 ? "> PLAY <" : "PLAY";
+            this.playText.fill = this.selected===0 ? "#ffffff" : "#000000";
+            this.speedText.text = this.selected===1 ? "> "+speedLabel+" <" : speedLabel;
+            this.speedText.fill = this.selected===1 ? "#ffffff" : "#000000";
+        },
+        choose: function(){
+            if(this.selected===0){
+                game.state.start("Play");
+            } else {
+                speedIndex = (speedIndex+1)%speeds.length;
+                this.updateTexts();
+            }
+        },
+        shutdown: function(){
+            this.oKey.onDown.removeAll();
+        }
+    };
 
     var play = function(game){};
 
@@ -29,6 +84,7 @@ window.onload = function(){
             game.load.image("pipe_top", "pipe-top.png");
         },
         create: function(){
+            birdSpeed = speeds[speedIndex].value;
             pipeGroup = game.add.group();
             score = 0;
             topScore = localStorage.getItem("topFlappyScore")==null?0:localStorage.getItem("topFlappyScore");
@@ -44,7 +100,9 @@ window.onload = function(){
             bird.scale.set(0.9);
             game.physics.arcade.enable(bird);
             bird.body.gravity.y = birdGravity;
-            game.input.keyboard.addKey(Phaser.Keyboard.O).onDown.add(flap, this);
+            var oKey = game.input.keyboard.addKey(Phaser.Keyboard.O);
+            oKey.onDown.removeAll();
+            oKey.onDown.add(flap, this);
             game.time.events.loop(birdPipeInterval, addPipe);
             addPipe();
         },
@@ -56,8 +114,9 @@ window.onload = function(){
         }
     };
 
+    game.state.add("Menu", menu);
     game.state.add("Play", play);
-    game.state.start("Play");
+    game.state.start("Menu");
 
     function updateScore(){
         scoreText.text = "Score: "+score+"\nBest: "+topScore;

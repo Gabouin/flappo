@@ -3,11 +3,18 @@
 A Flappy Bird clone built with [Phaser CE](https://github.com/phaserjs/phaser-ce) (Phaser 2), with hand-drawn graphics.
 
 <p align="center">
-  <img src="screenshots/start.png" alt="Start of a game" width="320">
-  <img src="screenshots/gameplay.png" alt="Gameplay with score" width="320">
+  <img src="screenshots/menu.png" alt="Start menu" width="240">
+  <img src="screenshots/start.png" alt="Start of a game" width="240">
+  <img src="screenshots/gameplay.png" alt="Gameplay with score" width="240">
 </p>
 
 ## How to play
+
+The whole game is played with a single key: **O**.
+
+In the start menu, the selection switches between PLAY and SPEED on its own. Press **O** to activate the highlighted line: PLAY starts the game, SPEED cycles between SLOW, NORMAL and FAST.
+
+In game:
 
 - Press the **O** key to flap
 - Fly between the pipes to score points
@@ -43,6 +50,6 @@ A few variables at the top of `index.html` let you tweak the difficulty:
 
 - `birdGravity`: gravity strength (default: 800)
 - `birdFlapPower`: power of one flap (default: 300)
-- `birdSpeed`: pipe scrolling speed (default: 125)
+- `speeds`: the SLOW / NORMAL / FAST values offered in the menu
 - `birdPipeInterval`: delay between pipes in ms (default: 2000)
 - `pipeHole`: size of the gap between pipes (default: 200)
