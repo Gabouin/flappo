@@ -26,6 +26,7 @@ window.onload = function(){
         preload: function(){
             game.load.image("bird", "bird.png");
             game.load.image("pipe", "pipe.png");
+            game.load.image("pipe_top", "pipe-top.png");
         },
         create: function(){
             pipeGroup = game.add.group();
@@ -40,9 +41,10 @@ window.onload = function(){
             game.physics.startSystem(Phaser.Physics.ARCADE);
             bird = game.add.sprite(80,240,"bird");
             bird.anchor.set(0.5);
+            bird.scale.set(0.9);
             game.physics.arcade.enable(bird);
             bird.body.gravity.y = birdGravity;
-            game.input.onDown.add(flap, this);
+            game.input.keyboard.addKey(Phaser.Keyboard.O).onDown.add(flap, this);
             game.time.events.loop(birdPipeInterval, addPipe);
             addPipe();
         },
@@ -67,8 +69,7 @@ window.onload = function(){
 
     function addPipe(){
         var pipeHolePosition = game.rnd.between(50, 430-pipeHole);
-        var upperPipe = new Pipe(game, 352, pipeHolePosition-240, -birdSpeed);
-        upperPipe.scale.y *= -1;
+        var upperPipe = new Pipe(game, 352, pipeHolePosition-240, -birdSpeed, true);
         game.add.existing(upperPipe);
         pipeGroup.add(upperPipe);
         var lowerPipe = new Pipe(game, 352, pipeHolePosition+pipeHole+240, -birdSpeed);
@@ -81,8 +82,8 @@ window.onload = function(){
         game.state.start("Play");
     }
 
-    var Pipe = function (game, x, y, speed){
-        Phaser.Sprite.call(this, game, x, y, "pipe");
+    var Pipe = function (game, x, y, speed, flipped){
+        Phaser.Sprite.call(this, game, x, y, flipped ? "pipe_top" : "pipe");
         this.anchor.set(0.5);
         this.width = 64;
         this.height = 480;
