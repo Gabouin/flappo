@@ -6,6 +6,7 @@ A Flappy Bird clone built with [Phaser CE](https://github.com/phaserjs/phaser-ce
   <img src="screenshots/menu.png" alt="Start menu" width="240">
   <img src="screenshots/start.png" alt="Start of a game" width="240">
   <img src="screenshots/gameplay.png" alt="Gameplay with score" width="240">
+  <img src="screenshots/gameover.png" alt="Game over screen" width="240">
 </p>
 
 ## How to play
@@ -18,7 +19,8 @@ In game:
 
 - Press the **O** key to flap
 - Fly between the pipes to score points
-- Hit a pipe, the ground or the ceiling and it's game over
+- Hit a pipe, the ground or the ceiling and it's game over: your score is displayed, then O brings you back to the menu
+- Watch out: some pipes scroll a bit slower, and some others slowly move up and down (never both at once)
 - Your best score is saved in the browser
 
 ## Run the game

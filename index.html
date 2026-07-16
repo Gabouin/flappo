@@ -17,6 +17,7 @@ window.onload = function(){
     var pipeDistance = 250;
     var pipeHole = 200;
     var pipeGroup;
+    var pipeCount = 0;
     var score = 0;
     var scoreText;
     var topScore;
@@ -84,6 +85,31 @@ window.onload = function(){
         }
     };
 
+    var gameOver = function(game){};
+
+    gameOver.prototype = {
+        create: function(){
+            game.stage.backgroundColor = "#87CEEB";
+            var title = game.add.text(160, 150, "GAME OVER", {font: "bold 40px Arial", fill: "#ffffff"});
+            title.anchor.set(0.5);
+            var best = Math.max(score, topScore);
+            var result = game.add.text(160, 250, "Score: "+score+"\nBest: "+best, {font: "bold 24px Arial", align: "center"});
+            result.anchor.set(0.5);
+            var help = game.add.text(160, 430, "press O for the menu", {font: "14px Arial"});
+            help.anchor.set(0.5);
+            this.oKey = game.input.keyboard.addKey(Phaser.Keyboard.O);
+            this.oKey.onDown.removeAll();
+            game.time.events.add(500, function(){
+                this.oKey.onDown.add(function(){
+                    game.state.start("Menu");
+                }, this);
+            }, this);
+        },
+        shutdown: function(){
+            this.oKey.onDown.removeAll();
+        }
+    };
+
     var play = function(game){};
 
     play.prototype = {
@@ -94,6 +120,7 @@ window.onload = function(){
         },
         create: function(){
             birdSpeed = speeds[speedIndex].value;
+            pipeCount = 0;
             pipeGroup = game.add.group();
             score = 0;
             topScore = localStorage.getItem("topFlappyScore")==null?0:localStorage.getItem("topFlappyScore");
@@ -116,6 +143,7 @@ window.onload = function(){
             addPipe();
         },
         update: function(){
+            bird.angle = Phaser.Math.clamp(bird.body.velocity.y * 0.15, -25, 90);
             game.physics.arcade.collide(bird, pipeGroup, die);
             if(bird.y>game.height || bird.y<0){
                 die();
@@ -125,6 +153,7 @@ window.onload = function(){
 
     game.state.add("Menu", menu);
     game.state.add("Play", play);
+    game.state.add("GameOver", gameOver);
     game.state.start("Menu");
 
     function updateScore(){
@@ -136,18 +165,28 @@ window.onload = function(){
     }
 
     function addPipe(){
+        pipeCount++;
+        var pipeSpeed = -birdSpeed;
+        var oscillate = false;
+        if(pipeCount % 6 === 3){
+            pipeSpeed *= 0.8;
+        } else if(pipeCount % 6 === 0){
+            oscillate = true;
+        }
         var pipeHolePosition = game.rnd.between(50, 430-pipeHole);
-        var upperPipe = new Pipe(game, 352, pipeHolePosition-240, -birdSpeed, true);
+        var upperPipe = new Pipe(game, 352, pipeHolePosition-240, pipeSpeed, true);
+        upperPipe.oscillate = oscillate;
         game.add.existing(upperPipe);
         pipeGroup.add(upperPipe);
-        var lowerPipe = new Pipe(game, 352, pipeHolePosition+pipeHole+240, -birdSpeed);
+        var lowerPipe = new Pipe(game, 352, pipeHolePosition+pipeHole+240, pipeSpeed);
+        lowerPipe.oscillate = oscillate;
         game.add.existing(lowerPipe);
         pipeGroup.add(lowerPipe);
     }
 
     function die(){
         localStorage.setItem("topFlappyScore", Math.max(score,topScore));
-        game.state.start("Play");
+        game.state.start("GameOver");
     }
 
     var Pipe = function (game, x, y, speed, flipped){
@@ -158,12 +197,17 @@ window.onload = function(){
         game.physics.enable(this, Phaser.Physics.ARCADE);
         this.body.velocity.x = speed;
         this.giveScore = true;
+        this.baseY = y;
+        this.oscillate = false;
     };
 
     Pipe.prototype = Object.create(Phaser.Sprite.prototype);
     Pipe.prototype.constructor = Pipe;
 
     Pipe.prototype.update = function() {
+        if(this.oscillate){
+            this.y = this.baseY + 40*Math.sin(this.game.time.totalElapsedSeconds()*2);
+        }
         if(this.x+this.width/2<bird.x && this.giveScore){
             score+=0.5;
             updateScore();
