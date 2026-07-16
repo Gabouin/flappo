@@ -1,4 +1,4 @@
-# Flappo 🐦
+# Flappo (flappy but with the o key)
 
 A Flappy Bird clone built with [Phaser CE](https://github.com/phaserjs/phaser-ce) (Phaser 2), with hand-drawn graphics.
 
